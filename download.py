@@ -1,41 +1,19 @@
-# coding=utf-8
-from urllib import request
-import requests
-from urllib.request import urlopen
+from subprocess import call
 from pymongo import MongoClient
-
-DOWNLOAD_PATH = 'D:/Downloads/PanDownload/wnacg/{}.zip'
-CHUNK_SIZE = 512
+import threading
 
 db_test = MongoClient().test
 wnacg = db_test.wnacg
 
 
-def download_zip(url, name):
-    request.urlretrieve(url, DOWNLOAD_PATH.format(name))
-
-
-def download_zip2(url, name):
-    res = urlopen(url)
-    with open(DOWNLOAD_PATH.format(name), 'wb') as f:
-        while True:
-            chunk = res.read(CHUNK_SIZE)
-            if not chunk:
-                break
-            f.write(chunk)
-
-
-def download_zip3(url, name):
-    res = urlopen(url).read()
-    with open(DOWNLOAD_PATH.format(name), 'wb') as f:
-        f.write(res)
+def download(url, name):
+    call(['you-get', url,
+          '-o', 'D:\Downloads\PanDownload\wnacg', '-O', name + '.zip'])
 
 
 for item in wnacg.find():
     try:
-        download_zip3(item['url'], item['title'])
+        download(item['url'], item['title'])
+        # threading._start_new_thread(download, (item['url'], item['title']))
     except Exception as e:
         print("Error:", e)
-
-
-print('OK')
