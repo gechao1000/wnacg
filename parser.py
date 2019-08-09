@@ -11,12 +11,16 @@ URL_PAGE_CATE1 = URL + '/albums-index-page-{}-cate-1.html'
 # 单行本
 URL_PAGE_CATE9 = URL + '/albums-index-page-{}-cate-9.html'
 
+# 素晴
+URL_PAGE_Q = URL + '/albums-index-page-{}-sname-素晴.html'
+# p2 = 'https://wnacg.org/albums-index-page-2-sname-%E7%B4%A0%E6%99%B4.html'
+
 db_test = MongoClient().test
-wnacg = db_test.wnacg
+wnacg = db_test.wnacg_cate9
 
 
 def parser(page=1):
-    res = requests.get(URL_PAGE_CATE1.format(page))
+    res = requests.get(URL_PAGE_CATE9.format(page))
     soup = BeautifulSoup(res.text, 'html5lib')
 
     pic_list = soup.find_all('div', 'pic_box')
@@ -51,7 +55,7 @@ def parser_meta(href):
     return uwuinfo[0].string, uwconn[0].string.split('：')[1], uwconn[1].string.split('：')[1]
 
 
-for i in range(1, 200):
+for i in range(1, 10):
     try:
         parser(i)
     except Exception as e:
